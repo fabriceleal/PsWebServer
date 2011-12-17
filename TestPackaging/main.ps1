@@ -1,29 +1,31 @@
-function local-Load-As-Module( $scriptBlock ){
-	local-Load-As-Module( $scriptBlock, "MODULE_" $scriptBlock.getHashCode().toString() )
+function localLoadAsModule( $script_block ){
+	$name = "MODULE_" + $script_block.getHashCode().toString();
+	#write-host $name
+	localLoadAsModulewName $script_block $name 
 }
 
-function local-Load-As-Module( $scriptBlock, $name ){
-	$dll = new-module -name $name -scriptBlock $scriptBlock
+function localLoadAsModulewName( $script_block, $name ){
+	$dll = new-module -name $name -scriptBlock $script_block
 	import-module -moduleInfo $dll
 }
 
 # Main
 $code = {
 
-	function Load-File( $filename ){ Load-File-wName( $filename, $filename) }
+	function LoadFile( $filename ){ LoadFilewName $filename $filename }
 	
-	function Load-File-wName( $filename, $name){
+	function LoadFilewName( $filename, $name){
 		$code = [system.io.file]::readAllText( $filename )
 		$script_block = [System.Management.Automation.ScriptBlock]::Create( $code )
-		Load-Script-wName( $script_block, $name )
+		LoadScriptwName $script_block $name
 	}
 
-	function Load-Script( $scriptBlock ){ local-Load-As-Module( $scriptBlock ) }
+	function LoadScript( $script_block ){ localLoadAsModule( $script_block ) }
 	
-	function Load-Script-wName( $scriptBlock, $name ){ local-Load-As-Module( $scriptBlock, $name ) }
+	function LoadScriptwName( $script_block, $name ){ localLoadAsModule $script_block $name }
 
-	export-modulemember -Function Load-Script, Load-Script-wName, Load-File, Load-File-wName
+	export-modulemember -Function LoadScript, LoadScriptwName, LoadFile, LoadFilewName
 }
 
 # Load itself in memory
-local-Load-As-Module($code)
+localLoadAsModule($code)
