@@ -6,9 +6,12 @@
 #$DLL = new-module -name $modulo -scriptBlock $script_block
 #import-module -moduleInfo $DLL
 
-# Fazer Test-Path para todas as definições ...
+# Do Test-Path for all definitions ...
 
-if(!(Test-Path variable:script:var_teste)) $script:var_teste = 0;  
+$itExists = Test-Path variable:script:var_teste
+if($itExists -eq $false){
+	$script:var_teste = 0;  
+}
 
 function add(){
 	$script:var_teste += 1
@@ -22,4 +25,4 @@ function get_var_teste(){
 	return $script:var_teste
 }
 
-export-modulemember -function add, fun_teste, get_var_teste -Variable script:var_teste
+export-modulemember -Function add, fun_teste, get_var_teste -Variable script:var_teste

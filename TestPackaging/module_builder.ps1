@@ -4,19 +4,17 @@
 
 # colocar em pasta dentro de 1 dos dirs em "Env:\PSModulePath"
 
-$script
-
-$modulo = "lib1"
+$modulo = "libs\lib1.ps1"
 $pwd = pwd
-$codigo = [system.io.file]::readAllText( "$pwd\libs\lib1.ps1" )
+$codigo = [system.io.file]::readAllText( [system.io.path]::Combine($pwd, $modulo) )
 $script_block = [System.Management.Automation.ScriptBlock]::Create( $codigo )
 $DLL = new-module -name $modulo -scriptBlock $script_block
 import-module -moduleInfo $DLL
 
 
-#$DLL
-$var_teste = 0
+# TESTS
 
+$var_teste = 0
 
 "---" | write-host
 add
