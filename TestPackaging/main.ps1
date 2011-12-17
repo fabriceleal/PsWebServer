@@ -1,3 +1,4 @@
+
 function localLoadAsModule( $script_block ){
 	$name = "MODULE_" + $script_block.getHashCode().toString();
 	#write-host $name
@@ -11,6 +12,19 @@ function localLoadAsModulewName( $script_block, $name ){
 
 # Main
 $code = {
+	
+	# I found no better way to do this .... those two functions must be on the inside and on the outside
+	function localLoadAsModule( $script_block ){
+		$name = "MODULE_" + $script_block.getHashCode().toString();		
+		localLoadAsModulewName $script_block $name 
+	}
+
+	function localLoadAsModulewName( $script_block, $name ){
+		$dll = new-module -name $name -scriptBlock $script_block
+		import-module -moduleInfo $dll
+	}
+	
+	###
 
 	function LoadFile( $filename ){ LoadFilewName $filename $filename }
 	
