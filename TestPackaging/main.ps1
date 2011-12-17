@@ -1,13 +1,12 @@
 
 function localLoadAsModule( $script_block ){
-	$name = "MODULE_" + $script_block.getHashCode().toString();
-	#write-host $name
+	$name = "MODULE_" + $script_block.toString().getHashCode().toString();
 	localLoadAsModulewName $script_block $name 
 }
 
 function localLoadAsModulewName( $script_block, $name ){
 	$dll = new-module -name $name -scriptBlock $script_block
-	import-module -moduleInfo $dll
+	import-module -moduleInfo $dll -global
 }
 
 # Main
@@ -15,13 +14,17 @@ $code = {
 	
 	# I found no better way to do this .... those two functions must be on the inside and on the outside
 	function localLoadAsModule( $script_block ){
-		$name = "MODULE_" + $script_block.getHashCode().toString();		
+		$name = "MODULE_" + $script_block.toString().getHashCode().toString();
 		localLoadAsModulewName $script_block $name 
+		#write-host " ... and after ..."
+		#get-module
 	}
 
 	function localLoadAsModulewName( $script_block, $name ){
 		$dll = new-module -name $name -scriptBlock $script_block
-		import-module -moduleInfo $dll
+		import-module -moduleInfo $dll -global
+		#write-host "Loading ..."
+		#get-module
 	}
 	
 	###

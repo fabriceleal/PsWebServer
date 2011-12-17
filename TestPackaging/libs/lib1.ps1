@@ -15,7 +15,8 @@ if($itExists -eq $false){
 function add(){
 	$a = add2;
 	"internal: " + $a | write-host
-	$script:var_teste += 1
+	$script:var_teste  += 1
+	return $script:var_teste
 }
 
 function fun_teste(){
