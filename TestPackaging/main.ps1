@@ -6,6 +6,8 @@ function localLoadAsModule( $script_block ){
 
 function localLoadAsModulewName( $script_block, $name ){
 	$dll = new-module -name $name -scriptBlock $script_block
+	# Remove existings first ...
+	get-module | where { $_.name -eq $name } | foreach { remove-module -moduleinfo $_ }
 	import-module -moduleInfo $dll -global
 }
 
@@ -22,6 +24,8 @@ $code = {
 
 	function localLoadAsModulewName( $script_block, $name ){
 		$dll = new-module -name $name -scriptBlock $script_block
+		# Remove existings first ...
+		get-module | where { $_.name -eq $name } | foreach { remove-module -moduleinfo $_ }
 		import-module -moduleInfo $dll -global
 		#write-host "Loading ..."
 		#get-module
@@ -34,7 +38,7 @@ $code = {
 	function LoadFilewName( $filename, $name){
 		$code = [system.io.file]::readAllText( $filename )
 		$script_block = [System.Management.Automation.ScriptBlock]::Create( $code )
-		LoadScriptwName $script_block $name
+		LoadScriptwName $script_block  $name
 	}
 
 	function LoadScript( $script_block ){ localLoadAsModule( $script_block ) }
