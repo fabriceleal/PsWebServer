@@ -1,10 +1,9 @@
-
-#$modulo = "lib2"
-#$pwd = pwd
-#$codigo = [system.io.file]::readAllText( "$pwd\libs\lib2.ps1" )
-#$script_block = [System.Management.Automation.ScriptBlock]::Create( $codigo )
-#$DLL = new-module -name $modulo -scriptBlock $script_block
-#import-module -moduleInfo $DLL
+$modulo = "libs\lib2.ps1"
+$pwd = pwd
+$codigo = [system.io.file]::readAllText( [system.io.path]::combine($pwd, $modulo) )
+$script_block = [System.Management.Automation.ScriptBlock]::Create( $codigo )
+$DLL = new-module -name $modulo -scriptBlock $script_block
+import-module -moduleInfo $DLL
 
 # Do Test-Path for all definitions ...
 
@@ -14,6 +13,8 @@ if($itExists -eq $false){
 }
 
 function add(){
+	$a = add2;
+	"internal: " + $a | write-host
 	$script:var_teste += 1
 }
 
