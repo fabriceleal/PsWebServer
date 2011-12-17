@@ -47,7 +47,7 @@ $notfound =
 
 $rules = @(
 			@(
-				{ $true },
+				{ $false },
 				{
 					cgiProcessContext $args[0]
 				}
@@ -73,14 +73,16 @@ $rules = @(
 				{
 					# Evaluate something with context ...
 					# Return boolean
-					($args[0].Request.HttpMethod -eq "GET") -and ($args[0].Request.RawUrl -match "/resources/.*")
+					($args[0].Request.HttpMethod -eq "GET") -and ($args[0].Request.RawUrl -match "(/.+){1,}/?")
 				},
 				{
 					# Do stuff with context ...
 					# Return string
 					"<html>" + 
 						"<head></head>" +
-						"<body>You are asking for resources ... Z&eacute; C&atilde;o</body>" +
+						"<body>" + 
+						
+						"</body>" +
 					"</html>"
 				}
 			)

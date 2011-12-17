@@ -46,25 +46,57 @@
 
 # ######################################################################
 
-# Setup Listener
-$listener = new-object System.Net.HttpListener
+$script:listener 	= $null
+$script:jobId 		= 0
 
-foreach ($prefix in $PREFIXES){ 
-	$listener.Prefixes.Add($prefix) 
+#$script:callback = [system.asyncCallback] {
+#		#write-host "cucu!"		
+#		#write-host $args
+#		
+#		if($script:listener -ne $null){
+#			# Register ...
+#			$listener.beginGetContext( $script:callback, $script:listener)
+#		}
+#	}
+
+function StartServer(){
+	if($script:listener -eq $null -and $script:jobId -eq 0){
+		# Setup Listener
+		$script:listener = new-object System.Net.HttpListener
+
+		foreach ($prefix in $PREFIXES){ 
+			$script:listener.Prefixes.Add($prefix) 
+		}
+
+		# Start Listener
+		$script:listener.start()
+
+		# This is awefully slow ...
+		#$script:jobId = start-job -scriptBlock {
+				while( $script:listener -ne $null ){
+					$result = $script:listener.getContext()
+				
+					processContext $result | out-null
+					$result
+				}
+		#	}
+		
+		$script:jobId = $script:jobId.Id
+		#$listener.beginGetContext( $script:callback, $script:listener)
+	}
 }
 
-# Start Listener
-$listener.start()
-
-# ** Blocking call **
-
-$result = $listener.getContext()
-
-processContext $result | out-null
-
-$result
-
-# Stop Listener
-$listener.stop()
+function StopServer(){
+	if($script:jobId -ne 0){
+		remove-job $script:jobId -force
+		$script:jobId = 0
+	}
+	if($script:listener -ne $null){
+		# Stop Listener
+		$script:listener.stop()
+		$script:listener.close()
+		$script:listener = $null;
+	}
+}
 
 # ######################################################################
