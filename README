@@ -1,0 +1,6 @@
+# PsWebServer
+
+Atempt at making a simple web server using Powershell. As it is dificult (if not impossible) to work with multi-threading 
+in Powershell, I stopped hacking :|
+
+Stalled at the moment.
